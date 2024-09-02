@@ -6,12 +6,12 @@ const props = defineProps<{ letter?: string; status?: LetterStatus }>();
 
 <template>
   <div
-    class="flex aspect-square w-20 select-none items-center justify-center border-2 border-slate-900 text-4xl font-bold text-slate-200"
+    class="flex aspect-square w-20 select-none items-center justify-center text-4xl font-bold text-slate-200"
     :class="{
+      'border-4 border-slate-600 bg-slate-900': props.status === undefined,
       'bg-[#538d4e]': props.status === LetterStatus.CORRECT,
       'bg-[#b59f3b]': props.status === LetterStatus.MISPLACED,
-      'bg-slate-700':
-        props.status === undefined || props.status === LetterStatus.NOT_FOUND,
+      'bg-gray-700': props.status === LetterStatus.NOT_FOUND,
     }"
   >
     <Transition>

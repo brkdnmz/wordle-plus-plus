@@ -10,7 +10,7 @@ const status = computed(() => wordleStore.guesses[props.rowIndex]?.status);
 </script>
 
 <template>
-  <div class="flex items-center justify-center gap-1">
+  <div class="flex items-center justify-center gap-2">
     <div v-for="colIndex in wordleStore.grid.cols" :key="colIndex">
       <Transition
         mode="out-in"

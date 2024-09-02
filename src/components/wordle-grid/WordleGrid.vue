@@ -26,7 +26,7 @@ onUnmounted(() => {
   <div class="grid gap-10">
     <SizeSelector />
 
-    <div class="grid gap-2">
+    <div class="grid gap-2 overflow-auto">
       <WordleRow
         v-for="rowIndex in wordleStore.grid.rows"
         :key="rowIndex"
