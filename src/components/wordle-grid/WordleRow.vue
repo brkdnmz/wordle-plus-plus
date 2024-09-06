@@ -13,19 +13,28 @@ const status = computed(() => wordleStore.guesses[props.rowIndex]?.status);
   <div class="flex items-center justify-center gap-2">
     <div v-for="colIndex in wordleStore.grid.cols" :key="colIndex">
       <Transition
+        name="entered-guess"
         mode="out-in"
         @before-leave="
           (el) => {
+            // Disable writing before the first letter's animation starts
+            if (colIndex === 1) {
+              wordleStore.setCanWrite(false);
+            }
+
             (el as HTMLElement).style.transitionDelay =
               0.4 * (colIndex - 1) + 's';
           }
+        "
+        @after-enter="
+          // Enable writing after the last letter's animation finishes
+          wordleStore.setCanWrite(colIndex === wordleStore.grid.cols)
         "
       >
         <WordleCell
           :key="`${colIndex}-${status?.[colIndex - 1]}`"
           :letter="word?.[colIndex - 1]?.toLocaleUpperCase('tr') ?? ''"
           :status="status?.[colIndex - 1]"
-          class="basis-1/5"
         />
       </Transition>
     </div>
@@ -33,26 +42,16 @@ const status = computed(() => wordleStore.guesses[props.rowIndex]?.status);
 </template>
 
 <style scoped>
-.v-enter-active,
-.v-leave-active {
+.entered-guess-enter-active,
+.entered-guess-leave-active {
   opacity: 1;
   transition: all 0.25s ease-in;
 }
 
-/* .v-leave-active {
-  transition-delay: 1s;
-} */
-
-.v-enter-from {
+.entered-guess-enter-from {
   transform: rotateX(90deg);
 }
-.v-leave-to {
+.entered-guess-leave-to {
   transform: rotateX(-90deg);
 }
-
-/* ensure leaving items are taken out of layout flow so that moving
-   animations can be calculated correctly. */
-/* .v-leave-active {
-  position: absolute;
-} */
 </style>

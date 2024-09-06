@@ -8,16 +8,17 @@ import type { WordleStore } from "./types";
 
 export const wordleStore = reactive<WordleStore>({
   gameStarted: false,
+  wordsByLength: WORDS_BY_LENGTH_MAP,
+  targetWord: (getWordType() === WordType.TODAYS_WORD
+    ? getTodaysWord
+    : getRandomWord)(DEFAULT_COLS),
   grid: {
     rows: DEFAULT_ROWS,
     cols: DEFAULT_COLS,
     currentRow: 0,
   },
   guesses: [],
-  wordsByLength: WORDS_BY_LENGTH_MAP,
-  targetWord: (getWordType() === WordType.TODAYS_WORD
-    ? getTodaysWord
-    : getRandomWord)(DEFAULT_COLS),
+  canWrite: true,
 
   startGame() {
     this.gameStarted = true;
@@ -41,6 +42,10 @@ export const wordleStore = reactive<WordleStore>({
         : getRandomWord(wordLength);
   },
   onKeyPress(key) {
+    if (!this.canWrite) {
+      return;
+    }
+
     const { grid, guesses } = this;
     const { currentRow } = grid;
 
@@ -79,5 +84,8 @@ export const wordleStore = reactive<WordleStore>({
           currentGuess.word += key.toLocaleLowerCase("tr");
         break;
     }
+  },
+  setCanWrite(canWrite) {
+    this.canWrite = canWrite;
   },
 });
