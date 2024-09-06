@@ -3,15 +3,24 @@ import { wordleStore } from "@/store";
 import { computed } from "vue";
 import WordleCell from "./WordleCell.vue";
 
-const props = defineProps<{ rowIndex: number }>();
+const props = defineProps<{
+  rowIndex: number;
+  cellSize: string;
+  gap: string;
+}>();
 
 const word = computed(() => wordleStore.guesses[props.rowIndex]?.word);
 const status = computed(() => wordleStore.guesses[props.rowIndex]?.status);
+
+const cols = computed(() => wordleStore.grid.cols);
+
+const borderWidth = computed(() => `calc(${props.cellSize} / 18)`);
+const fontSize = computed(() => `calc(${props.cellSize} / 2.2)`);
 </script>
 
 <template>
-  <div class="flex items-center justify-center gap-2">
-    <div v-for="colIndex in wordleStore.grid.cols" :key="colIndex">
+  <div class="flex items-center justify-center" :style="{ gap: props.gap }">
+    <div v-for="colIndex in cols" :key="colIndex">
       <Transition
         name="entered-guess"
         mode="out-in"
@@ -28,13 +37,18 @@ const status = computed(() => wordleStore.guesses[props.rowIndex]?.status);
         "
         @after-enter="
           // Enable writing after the last letter's animation finishes
-          wordleStore.setCanWrite(colIndex === wordleStore.grid.cols)
+          wordleStore.setCanWrite(colIndex === cols)
         "
       >
         <WordleCell
           :key="`${colIndex}-${status?.[colIndex - 1]}`"
           :letter="word?.[colIndex - 1]?.toLocaleUpperCase('tr') ?? ''"
           :status="status?.[colIndex - 1]"
+          :border-width="borderWidth"
+          :style="{
+            width: cellSize,
+            fontSize,
+          }"
         />
       </Transition>
     </div>

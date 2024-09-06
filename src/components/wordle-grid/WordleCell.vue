@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { LetterStatus } from "@/types";
 
-const props = defineProps<{ letter?: string; status?: LetterStatus }>();
+const props = defineProps<{
+  letter?: string;
+  status?: LetterStatus;
+  borderWidth?: string;
+}>();
 </script>
 
 <template>
@@ -9,14 +13,18 @@ const props = defineProps<{ letter?: string; status?: LetterStatus }>();
     <Transition name="outer">
       <div
         :key="props.letter"
-        class="flex aspect-square w-20 select-none items-center justify-center text-4xl font-bold text-slate-200"
+        class="flex aspect-square select-none items-center justify-center font-bold text-slate-200"
         :class="{
-          'border-4 border-slate-600 bg-slate-900': props.status === undefined,
+          'border-slate-600 bg-slate-900': props.status === undefined,
           'bg-[#538d4e]': props.status === LetterStatus.CORRECT,
           'bg-[#b59f3b]': props.status === LetterStatus.MISPLACED,
           'bg-gray-700': props.status === LetterStatus.NOT_FOUND,
 
           'with-letter': props.letter,
+        }"
+        :style="{
+          borderWidth:
+            props.status === undefined ? props.borderWidth : undefined,
         }"
       >
         <Transition name="inner">
