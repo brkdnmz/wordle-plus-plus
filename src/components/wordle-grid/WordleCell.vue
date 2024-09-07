@@ -27,10 +27,16 @@ const props = defineProps<{
             props.status === undefined ? props.borderWidth : undefined,
         }"
       >
-        <Transition name="inner">
-          <span v-if="props.letter" class="align-middle">{{
-            props.letter
-          }}</span>
+        <!-- 
+            This could also be achieved by removing this Transition element and
+            add an `inner` class to the element (which I tried), but I prefer this solution.
+
+            `appear` is for enabling the animation during first render, which is always the case.
+        -->
+        <Transition name="inner" appear>
+          <span v-if="props.letter" class="align-middle">
+            {{ props.letter }}
+          </span>
         </Transition>
       </div>
     </Transition>
@@ -56,5 +62,9 @@ const props = defineProps<{
 
 .outer-enter-from.with-letter {
   scale: 1.15;
+}
+
+.outer-leave-active {
+  display: none;
 }
 </style>
