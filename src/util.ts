@@ -30,11 +30,12 @@ export function compare(guess: string, target: string): GuessStatus {
 
     if (guessedLetter === correctLetter) continue;
 
-    if (letterCounts[guessedLetter]) status[letterPos] = LetterStatus.MISPLACED;
-    else if (guessedLetter !== correctLetter)
+    if (letterCounts[guessedLetter]) {
+      status[letterPos] = LetterStatus.MISPLACED;
+      letterCounts[guessedLetter]--;
+    } else if (guessedLetter !== correctLetter) {
       status[letterPos] = LetterStatus.NOT_FOUND;
-
-    letterCounts[guessedLetter]--;
+    }
   }
 
   return status;
