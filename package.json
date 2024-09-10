@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
@@ -16,6 +16,8 @@
     "@types/lodash-es": "^4.17.12",
     "clsx": "^2.1.1",
     "lodash-es": "^4.17.21",
+    "lucide-vue-next": "^0.439.0",
+    "tailwind-merge": "^2.5.2",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
     "zod": "^3.23.8"

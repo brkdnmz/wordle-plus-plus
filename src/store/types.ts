@@ -19,6 +19,7 @@ export type WordleStore = {
     word: string;
     status?: LetterStatus[];
   }[];
+  letterStatuses: Partial<Record<string, LetterStatus>>;
   canWrite: boolean; // For disabling writing after entering a guess
 
   startGame: () => void;

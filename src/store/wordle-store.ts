@@ -1,6 +1,6 @@
 import { getRandomWord, getTodaysWord, WORDS_BY_LENGTH_MAP } from "@/data";
 import { getWordType } from "@/local-storage";
-import { WordType } from "@/types";
+import { LetterStatus, WordType } from "@/types";
 import { compare, isTurkishLetter } from "@/util";
 import { reactive } from "vue";
 import { DEFAULT_COLS, DEFAULT_ROWS } from "./constants";
@@ -18,6 +18,7 @@ export const wordleStore = reactive<WordleStore>({
     currentRow: 0,
   },
   guesses: [],
+  letterStatuses: {},
   canWrite: true,
 
   startGame() {
@@ -74,6 +75,33 @@ export const wordleStore = reactive<WordleStore>({
 
         currentGuess.status = compare(currentGuess.word, this.targetWord);
 
+        for (
+          let letterIndex = 0;
+          letterIndex < currentGuess.word.length;
+          letterIndex++
+        ) {
+          const letter = currentGuess.word[letterIndex];
+          const status = currentGuess.status[letterIndex];
+          switch (status) {
+            case LetterStatus.NOT_FOUND:
+              this.letterStatuses[letter] ??= LetterStatus.NOT_FOUND;
+              break;
+            case LetterStatus.MISPLACED:
+              if (
+                this.letterStatuses[letter] === undefined ||
+                this.letterStatuses[letter] === LetterStatus.NOT_FOUND
+              )
+                this.letterStatuses[letter] = LetterStatus.MISPLACED;
+              break;
+            case LetterStatus.CORRECT:
+              this.letterStatuses[letter] = LetterStatus.CORRECT;
+              break;
+
+            default:
+              break;
+          }
+        }
+
         if (grid.currentRow < grid.rows) {
           grid.currentRow++;
         }
@@ -89,3 +117,11 @@ export const wordleStore = reactive<WordleStore>({
     this.canWrite = canWrite;
   },
 });
+
+export function onKeyPress(key: string) {
+  if (!wordleStore.gameStarted && isTurkishLetter(key)) {
+    wordleStore.startGame();
+  }
+
+  if (wordleStore.gameStarted) wordleStore.onKeyPress(key);
+}
